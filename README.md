@@ -3,8 +3,9 @@
 #API
 
   
-  `var picker = new Picker({  `  
-                   ` data:["睡眠模式","风速1档","风速2档","风速3档","强风模式","  
+  var picker = new Picker({  
+  
+                    data:["睡眠模式","风速1档","风速2档","风速3档","强风模式","  
                     
                     智能模式"],  
                     maxFont:20,  
