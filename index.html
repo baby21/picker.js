@@ -24,13 +24,19 @@
 <body>
 <script type="text/javascript" src="js/picker.js"></script>
 <script type="text/javascript">
-	var picker = new Picker({
-		data:['一周年','一周年','一周年','一周年','一周年','一周年','一周年'],
-		maxFont:20,
-		success:function(){
-			alert();
-		}
-	});
+	if(window.picker){
+                window.picker.show()
+            }else{
+                window.picker = new Picker({
+                    data:["睡眠模式","风速1档","风速2档","风速3档","强风模式","智能模式"],
+                    maxFont:20,
+                    attrName:"data-id",
+                    attrs:["runmodelsleep","HandOne","HandTwo","HandThree","runmodelstrong","runmodelauto"],
+                    ensure:function(item,index){
+                    },
+                    cancel:function(){}
+            })
+           }     
 </script>   
 </body>
 </html>

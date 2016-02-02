@@ -1,21 +1,29 @@
 var Picker = function(options){
 		this.data = options.data;
-		this.success = options.success;
-		this.maxFont = options.maxFont;
-		this.index = this.data.length;
-		this.initDOM();
-		this.picker = document.getElementById(this.id);
-		this.items = this.picker.getElementsByTagName('dd');
-		this.height = this.items[0].offsetHeight;
-		this.events();
-		this.goIndex(this.index);
-		this.setStyle();
+		this.maxFont = options.maxFont || 20;
+        this.attrName = options.attrName;
+        this.attrs = options.attrs;
+        this.ensureCallback = options.ensure || this.noop;
+        this.cancelCallback = options.cancel || this.noop;
+        this.init();
 	}
 Picker.prototype = {
     constructor: Picker,
+    noop:function(){},
+    init:function(){
+        this.index = this.data.length;
+        this.initDOM();
+        this.height = this.items[0].offsetHeight;
+        this.events();
+        this.goIndex(this.index);
+        this.setStyle();
+    },
     initDOM: function() {
         this.wrap = document.createElement('div');
         this.wrap.setAttribute('class', 'picker-container');
+        var height = window.innerHeight;
+        var zoom = height/568;
+        this.wrap.style.zoom = zoom;
         var area = document.createElement('div');
         area.setAttribute('class', 'picker-area');
         var view = document.createElement('p');
@@ -31,7 +39,11 @@ Picker.prototype = {
         this.id = 'picker' + Math.random();
         var dds = '';
         for (var i = 0; i < this.data.length; i++) {
-            dds += '<dd>' + this.data[i] + '</dd>';
+           if(this.attrName){
+               dds += '<dd '+this.attrName+'='+this.attrs[i]+'>' + this.data[i] + '</dd>';
+           }else{
+               dds += '<dd>' + this.data[i] + '</dd>';
+           }
         }
         dds += dds += dds;
         var html = '<dl id="' + this.id + '" style="transform:translateY(0px);">' + dds + '</dl>';
@@ -41,6 +53,8 @@ Picker.prototype = {
         this.wrap.appendChild(ensure);
         this.wrap.appendChild(cancel);
         document.body.appendChild(this.wrap);
+        this.picker = document.getElementById(this.id);
+        this.items = this.picker.getElementsByTagName('dd');
     },
     show: function() {
         this.wrap.style.display = 'block';
@@ -50,12 +64,13 @@ Picker.prototype = {
     },
     events: function() {
         var picker = this.picker;
-        //picker.onclick=function(){alert(0)}
-        document.addEventListener('touchstart', this.handleStart.bind(this));
+        this.wrap.addEventListener('touchstart', this.handleStart.bind(this));
         picker.addEventListener('touchmove', this.handleMove.bind(this));
         picker.addEventListener('touchend', this.handleEnd.bind(this));
-        this.ensure.addEventListener('touchstart', this.success);
-        this.cancel.addEventListener('touchstart', this.hide.bind(this));
+        this.ensure.addEventListener('touchstart', function(){
+            this.ensureCallback(this.items[this.index],this.index);
+        }.bind(this));
+        this.cancel.addEventListener('touchstart', this.cancelCallback);
     },
     _transTop: function(trsY) {
         var picker = trsY || this.picker;
@@ -69,6 +84,8 @@ Picker.prototype = {
     },
     goIndex: function(n) {
         this.setTransY((2 - n) * this.height);
+        this.index = n;
+        this.setStyle();
     },
     setStyle: function() {
         var top = this._transTop();
@@ -78,10 +95,10 @@ Picker.prototype = {
         var maxFont = this.maxFont || 20;
         var minFont = this.minFont || 15;
         for (var i = 0; i < items.length; i++) {
-            if (Math.abs(i - this.index) < 3) {
+            if (Math.abs(i - this.index) < 4) {
                 items[i].style.fontSize = maxFont - Math.abs((top + height * i + height/2) - cenTop) / minFont+ 'px'; 
-                items[i].style.transform = 'rotate(3deg)'
-                items[i].style.opacity = 1 - Math.abs((top +  height* i + height/2) - cenTop) / (4*this.height);
+                items[i].style.transform = 'rotate(1deg)'
+                items[i].style.opacity = 1.1 - Math.abs((top +  height* i + height/2) - cenTop) / (4*this.height);
             }
         }
     },
