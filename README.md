@@ -1,7 +1,7 @@
 ﻿# Picker.js
 仿IOS的滚轴选择插件
 #API
-var picker = new Picker({
+`var picker = new Picker({
                     data:["睡眠模式","风速1档","风速2档","风速3档","强风模式","智能模式"],
                     maxFont:20,
                     attrName:"data-id",
@@ -9,7 +9,7 @@ var picker = new Picker({
                     ensure:function(item,index){
                     },
                     cancel:function(){}
-                })
+                })`
 #data
 生成滚轴的单元内容
 
