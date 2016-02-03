@@ -33,8 +33,11 @@
                     attrName:"data-id",
                     attrs:["runmodelsleep","HandOne","HandTwo","HandThree","runmodelstrong","runmodelauto"],
                     ensure:function(item,index){
+                        alert(index)
                     },
-                    cancel:function(){}
+                    cancel:function(){
+                        picker.hide()
+                    }
                 })
             }     
 </script>   
