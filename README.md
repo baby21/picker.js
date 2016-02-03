@@ -1,4 +1,5 @@
-﻿# Picker.js
+﻿2
+# Picker.js
 仿IOS的滚轴选择插件
 #API  
 `var picker = new Picker({  `
